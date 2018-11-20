@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template.xhtml">
+	<ui:define name="conteudoPagina">
+		<h:form prependId="formCadastroInsumo">
+			<p:fieldset legend="Cadastro">
+
+				<h:outputLabel for="descricao" value="Descrição:" />
+				<p:inputText id="descricao"
+					value="#{insumoFormController.insumo.descricao}" />
+
+				<h:outputLabel for="valor" value="Valor:" />
+				<p:inputText id="valor" value="#{insumoFormController.insumo.valor}" />
+
+				<h:outputLabel for="tipoCultura" value="Tipo Cultura:" />
+				<p:selectOneMenu id="tipoCultura"
+					converter="#{tipoCulturaConverter}"
+					value="#{insumoFormController.insumo.tipoCultura}">
+					<f:selectItem itemLabel="Selecione" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems var="var" itemLabel="#{var.descricao}"
+						itemValue="#{var}"
+						value="#{insumoFormController.buscarListaTipoCultura()}" />
+				</p:selectOneMenu>
+
+				<p:separator />
+				<p:commandButton value="Enviar" id="enviarCadastro"
+					actionListener="#{insumoFormController.salvar()}"
+					update="@form :dtInsumo">
+				</p:commandButton>
+			</p:fieldset>
+
+			<p:fieldset legend="Lista">
+
+				<p:dataTable var="var" id="dtInsumo"
+					value="#{insumoFormController.buscarInsumoCadastrado()}">
+
+					<p:column headerText="Id">
+						<h:outputText value="#{var.id}" />
+					</p:column>
+
+					<p:column headerText="Descrição">
+						<h:outputText value="#{var.descricao}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputText value="#{var.valor}" />
+					</p:column>
+
+					<p:column headerText="Cultura">
+						<h:outputText value="#{var.tipoCultura.descricao}" />
+					</p:column>
+
+					<p:column>
+						<p:commandLink value="Editar" style="margin: 5px;"
+							actionListener="#{insumoFormController.editar(var)}"
+							update="@form" />
+
+						<p:commandLink value="Exluir"
+							actionListener="#{insumoFormController.excluir(var.id)}"
+							update="@form" />
+					</p:column>
+
+				</p:dataTable>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
